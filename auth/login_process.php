@@ -19,11 +19,11 @@ if ($result->num_rows === 1) {
         $_SESSION['role'] = $row['role'];
 
         if ($row['role'] === 'admin') {
-            header("Location: /xampp2/htdocs/Sugo/admin/dashboard.php");
+            header("Location: /Sugo/admin/dashboard.php");
         } elseif ($row['role'] === 'worker') {
-            header("Location: /xampp2/htdocs/Sugo/worker/home.php");
+            header("Location: /Sugo/worker/home.php");
         } else {
-            header("Location: /xampp2/htdocs/Sugo/user/home/php");
+            header("Location: /Sugo/user/home.php");
         }
         exit;
     }
