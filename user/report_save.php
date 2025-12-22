@@ -13,7 +13,12 @@ $photo_path = NULL;
 if (!empty($_FILES['photo']['name'])) {
     $filename = time() . "_" . $_FILES['photo']['name'];
     $target = "/xampp2/htdocs/Sugo/uploads/reports/" . $filename;
+
+    if (move_uploaded_file($_FILES['photo']['tmp_name'], $target)) {
+        $photo_path = "uploads/reports/" . $filename;
+    }
 }
+
 $sql = "INSERT INTO reports (user_id, title, description, photo_path, latitude, longitude)
         VALUES (?, ?, ?, ?, ?, ?)";
 $stmt = $conn->prepare($sql);

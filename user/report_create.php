@@ -53,39 +53,38 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'user') {
                 <button type="submit">Submit Report</button>
             </form>
         </div>
-
         <script>
-            //Google Map Interaction
-            let map, marker;
+    let map, marker;
 
-            function initMap() {
-                const defaultLoc = {
-                    lat: 12.8797, lng: 121.7740
-                };
+    function initMap() {
+        const defaultLoc = { lat: 9.6647, lng:123.3256 };
 
-                map = new google.maps.Map(dpcument.getElementById("map"), {
-                    zoom: 6,
-                    center: defaultLoc
+        map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 6,
+            center: defaultLoc
+        });
+
+        map.addListener("click", (e) => {
+            const pos = e.latLng;
+
+            if (!marker) {
+                marker = new google.maps.Marker({
+                    position: pos,
+                    map: map
                 });
-
-                map.addListener("click", (e) => {
-                    const pos = e.latLng;
-
-                    if (!marker) {
-                        marker = new google.maps.Marker({
-                            position: pos,
-                            map: map
-                        });
-                    } else {
-                        marker.setPosition(pos);
-                    }
-
-                    document.getElementById("lat").value = pos.lat();
-                    document.getElementById("lng").value = pos.lng();
-                });
+            } else {
+                marker.setPosition(pos);
             }
-        </script>
 
-        <script src="https://maps/googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap" async defer></script>
+            document.getElementById("lat").value = pos.lat();
+            document.getElementById("lng").value = pos.lng();
+        });
+    }
+
+    window.onload = initMap;
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1g808lCIljv4UQPq6fLfa6uwdLiiLpsc" async defer></script>
+
     </body>
 </html>
