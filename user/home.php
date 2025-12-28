@@ -205,6 +205,24 @@ $stmt->close();
             }
         }
 
+        #typing-greeting {
+            display: inline-block;
+            border-right: 3px solid var(--primary-color);
+            white-space: nowrap;
+            overflow: hidden;
+            padding-right: 5px;
+            animation: blinkCursor 0.8s step-end infinite;
+        }
+
+        @keyframes blinkCursor {
+            from, to {
+                border-color: transparent
+            }
+            50% {
+                border-color: var(--primary-color)
+            }
+        }
+
 
     </style>
 </head>
@@ -214,7 +232,7 @@ $stmt->close();
             <i class="fas fa-tools"></i>
         </div>
 
-        <h1>Hello, <?php echo htmlspecialchars($name); ?></h1>
+        <h1 id="typing-greeting"></h1>
         <p>Your SUGO Service Hub</p>
 
         <div class="btn-container">
@@ -240,5 +258,22 @@ $stmt->close();
             </a>
         </div>
     </div>
+
+
+    <script>
+        const name = "<?php echo addslashes(htmlspecialchars($name)); ?>";
+        const text = `Hello, ${name}!`;
+        let index = 0;
+
+        function typeEffect() {
+            if (index < text.length) {
+                document.getElementById("typing-greeting").innerHTML += text.charAt(index);
+                index++;
+                setTimeout(typeEffect, 100);
+            }
+        }
+
+        window.onload = typeEffect;
+    </script>
 </body>
 </html>

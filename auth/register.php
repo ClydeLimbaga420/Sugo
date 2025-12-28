@@ -59,7 +59,7 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.25);
             text-align: center;
             box-sizing: border-box;
-            animation: slideIn 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+           
             backdrop-filter: blur(10px);
         }
 

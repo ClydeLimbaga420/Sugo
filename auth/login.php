@@ -61,7 +61,6 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.25);
             text-align: center;
             box-sizing: border-box;
-            animation: slideUp 0.8s ease-out;
             backdrop-filter: blur(10px);
         }
 
