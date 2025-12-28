@@ -10,6 +10,14 @@ require "../config/db.php";
 
 $user_id = $_SESSION['user_id'];
 
+$user_query = $conn->prepare("SELECT name FROM users WHERE id = ?");
+$user_query->bind_param("i", $user_id);
+$user_query->execute();
+$user_result = $user_query->get_result();
+$user_data = $user_result->fetch_assoc();
+$name = $user_data['name'] ?? 'User';
+$user_query->close();
+
 $stmt = $conn->prepare(
     "SELECT COUNT(*) AS unread FROM notifications WHERE user_id = ? AND is_read = 0"
 );
@@ -206,7 +214,7 @@ $stmt->close();
             <i class="fas fa-tools"></i>
         </div>
 
-        <h1>Hello, <?php echo htmlspecialchars($_SESSION['role']); ?></h1>
+        <h1>Hello, <?php echo htmlspecialchars($name); ?></h1>
         <p>Your SUGO Service Hub</p>
 
         <div class="btn-container">
