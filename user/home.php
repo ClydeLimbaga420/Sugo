@@ -5,6 +5,19 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'user') {
     header("Location: /Sugo/auth/login.php");
     exit;
 }
+
+require "../config/db.php";
+
+$user_id = $_SESSION['user_id'];
+
+$stmt = $conn->prepare(
+    "SELECT COUNT(*) AS unread FROM notifications WHERE user_id = ? AND is_read = 0"
+);
+
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$unread = $stmt->get_result()->fetch_assoc()['unread'];
+$stmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -105,6 +118,27 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'user') {
         .logout:hover {
             background: #d32f2f;
         }
+
+        .notify {
+            background: #ff9800;
+            position: relative;
+        }
+
+        .notify:hover {
+            background: #fb8c00;
+        }
+
+        .notify .badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #f44336;
+            color: white;
+            font-size: 12px;
+            padding: 4px 7px;
+            border-radius: 50%;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -113,8 +147,12 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'user') {
         <p>Welcome to SUGO</p>
         <a class="action-btn create" href="report_create.php">Create Report</a>
         <a class="action-btn reports" href="my_reports.php">My Reports</a>
-        <a class="action-btn logout" href="../auth/logout.php">Logout</a>
-
+        <a class="action-btn logout" href="../auth/login.php">Logout</a>
+        <a class="action-btn notify" href="notifications.php"> 🔔 Notifications
+        <?php if ($unread > 0): ?>    
+            <span class="badge">!</span>
+        <?php endif; ?>
+        </a>
     </div>
 </body>
 </html>

@@ -15,6 +15,16 @@ if (!isset($_GET['id'])) {
 $report_id = $_GET['id'];
 $user_id = $_SESSION['user_id'];
 
+if (isset($_GET['read'])) {
+    $notif_id = (int)$_GET['read'];
+
+    $stmt = $conn->prepare(
+        "UPDATE notifications SET is_read = 1 WHERE id = ? AND user_id = ?"
+    );
+    $stmt->bind_param("ii", $notif_id, $user_id);
+    $stmt->execute();
+}
+
 $sql = "SELECT * FROM reports WHERE id = ? AND user_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("ii", $report_id, $user_id);

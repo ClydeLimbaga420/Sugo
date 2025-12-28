@@ -96,11 +96,11 @@ $stmt->close();
             background: #fff3cd; 
             color: #856404; 
         }   
-        .status.approved { 
+        .status.resolved { 
             background: #d4edda; 
             color: #155724; 
         }  
-        .status.rejected { 
+        .status.assigned { 
             background: #f8d7da; 
             color: #721c24; 
         }

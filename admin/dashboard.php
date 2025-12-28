@@ -98,14 +98,39 @@ $result = $conn->query($sql);
             color: #777;
         }
 
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .logout-btn {
+            background: #f44336;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .logout-btn:hover {
+            background: #d32f2f;
+        }
     </style>
 
 </head>
 <body>
     <div class="container">
-        <h1>Admin Dashboard</h1>
-        <p>Welcome Admin</p>
+        <div class="header">
+            <div>
+                <h1>Admin Dashboard</h1>
+                <p>Welcome Admin</p>
+            </div>
 
+            <a href="../auth/login.php" class="logout-btn">Logout</a>
+        </div>
         <table>
             <tr>
                 <th>ID</th>

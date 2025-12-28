@@ -108,6 +108,14 @@ if (!$report) {
             background: #eee;
         }
 
+        .btn-notify {
+            background: #4caf50;
+        }
+        
+        .btn-notify:hover {
+            background: #43a047;
+        }
+
     </style>
 </head>
 <body>
@@ -152,7 +160,11 @@ if (!$report) {
         <div class="actions">
             <a href="dashboard.php" class="btn btn-back">Back</a>
             <a href="assign_worker.php?id=<?= $report['id'] ?>" class="btn btn-assign">Assign Worker</a>
+            <a href="notify_user.php?id=<?= $report['id'] ?>" class="btn btn-notify">Notify User</a>
         </div>
+
+        
+
     </div>
 
     <script>
