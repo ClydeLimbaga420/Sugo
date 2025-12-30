@@ -24,153 +24,277 @@ $notifications = $stmt->get_result();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notifications</title>
+    <title>SUGO | Notifications</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
     <style>
+        :root {
+            --primary-color: #2196f3;
+            --unread-bg: #e3f2fd;
+            --bg-gradient: linear-gradient(-45deg, #00bcd4, #2196f3, #3f51b5, #00bcd4);
+        }
+
         body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            padding: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+            overflow-x:hidden;
+            box-sizing: border-box;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .container {
-            max-width: 900px;
-            margin: auto;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            backdrop-filter: 0 20px 40px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
             overflow: hidden;
         }
 
-        .header {
-            padding: 20px;
-            background: #2196f3;
-            color: white;
+        header {
+            padding: 25px 30px;
+            background: white;
+            border-bottom: 2px solid #f0f2f5;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .header h2 {
+        header h2 {
             margin: 0;
+            font-size: 22px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notif-count {
+            background: var(--primary-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
         }
 
         .notif-list {
-            padding: 10px 0;
+            max-height: 600px;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
 
-        .notif {
+        .notif-item {
             display: flex;
-            gap: 12px;
-            padding: 15px 20px;
-            border-bottom: 1px solid #eee;
-            transition: background .2s;
+            gap: 15px;
+            padding: 20px 30px;
+            border-bottom: 1px solid #f0f2f5;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
         }
 
-        .notif:hover {
-            background: #f9fbfd;
+        .notif-item:hover {
+            background: #f8fbff;
+            transform: scale(1.01);
+            z-index: 2;
         }
 
-        .notif.unread {
-            background: #e3f2fd;
+        .notif-item.unread {
+            background: var(--unread-bg);
         }
 
-        .icon {
-            font-size: 22px;
-            line-height: 1;
-            color: #2196f3;
+        .notif-item.unread::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--primary-color);
         }
 
-        .notif-content {
+        .icon-box {
+            width: 45px;
+            height: 45px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            font-size: 18px;
+            color: var(--primary-color);
+            flex-shrink: 0;
+        }
+
+        .unread .icon-box {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .content {
             flex: 1;
         }
 
-        .notif-content p {
-            margin: 0 0 6px;
-            font-size: 14px;
+        .message {
+            margin: 0 0 5px;
+            font-size: 15px;
+            color: #333;
+            line-height: 1.4;
         }
 
-        .notif-content small {
-            color: #777;
+        .unread .message {
+            font-weight: 600;
+        }
+
+        .meta {
             font-size: 12px;
+            color: #888;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .notif-actions {
+        .report-tag {
+            background: #eee;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .actions {
             display: flex;
             align-items: center;
         }
 
-        .btn {
-            padding: 6px 10px;
-            font-size: 12px;
-            border-radius: 6px;
-            text-decoration: none;
-            background: #2196f3;
+        .btn-view {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+            transition: 0.2s;
+        }
+
+        .btn-view:hover {
+            background: var(--primary-color);
             color: white;
+            border-color: var(--primary-color);
         }
 
-        .empty {
+        .empty-state {
+            padding: 60px 20px;
             text-align: center;
-            padding: 40px;
-            color: #777;
+            color: #aaa;
         }
 
-        .back {
-            display: inline-block;
-            margin: 15px;
+        .empty-state i {
+            font-size: 60px;
+            margin-bottom: 20px;
+            opacity: 0.3s;
+        }
+
+        footer {
+            padding: 15px 30px;
+            background: #fafafa;
+            text-align: center;
+        }
+
+        .back-link {
             text-decoration: none;
-            color: #2196f3;
+            color: #777;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.2s;
         }
 
-        @media (max-width: 600px) {
-            .notif {
-                flex-direction: column;
-            }
-
-            .notif-actions {
-                margin-top: 8px;
-            }
+        .back-link:hover {
+            color: var(--primary-color);
         }
-
     </style>
 </head>
 <body>
+    
     <div class="container">
-        <div class="header">
-            <h2>Notifications</h2>
-            <span><?= $notifications->num_rows ?> Total</span>
-        </div>
+        <header>
+            <h2><i class="fas fa-bell"></i>  Notifications</h2>
+            <span class="notif-count"><?= $notifications->num_rows ?>  Total</span>
+        </header>
 
         <div class="notif-list">
             <?php if ($notifications->num_rows === 0): ?>
-                <div class="empty">
-                    <p>No notifications yet</p>
+                <div class="empty-state">
+                    <i class="fas fa-bell-slash"></i>
+                    <p>No Messages Yet.</p>
                 </div>
             <?php endif; ?>
 
             <?php while ($n = $notifications->fetch_assoc()): ?>
-                <div class="notif <?= !$n['is_read'] ? 'unread' : '' ?>">
+                <a href="view_report_user.php?id=<?= $n['report_id'] ?>&read=<?= $n['id'] ?>"
+                    class="notif-item <?= !$n['is_read'] ? 'unread' : '' ?>">
 
-                <div class="icon">
-                    <?= !$n['is_read'] ? '🔔' : '📩' ?>
-                </div>
+                    <div class="icon-box">
+                        <i class="fas <?= !$n['is_read'] ? 'fa-envelope-open-text' : 'fa-check-double' ?>"></i>
+                    </div>
 
-                <div class="notif-content">
-                    <p><?= htmlspecialchars($n['message']) ?></p>
-                    <small>
-                        Report: <?= htmlspecialchars($n['title']) ?> ·
-                        <?= date("M d, Y h:i A", strtotime($n['created_at']) ) ?>
-                    </small>
-                </div>
+                    <div class="content">
+                        <p class="message"><?= htmlspecialchars($n['message']) ?></p>
+                        <div class="meta">
+                            <span class="report-tag"><i class="fas fa-tools"></i> <?= htmlspecialchars($n['title']) ?></span>
+                            <span>•</span>
+                            <span><?= date("M d, g:i A", strtotime($n['created_at'])) ?></span>
+                        </div>
+                    </div>
 
-                <div class="notif-actions">
-                    <a class="btn" href="view_report_user.php?id=<?= $n['report_id'] ?>&read=<?= $n['id'] ?>"> View </a>
-                </div>
+                    <div class="actions">
+                        <span class="btn-view">Details</span>
+                    </div>
+            </a>
             <?php endwhile; ?>
         </div>
 
-        <a class="back" href="home.php">Back To Dashboard</a>
-
+        <footer>
+                <a class="back-link" href="home.php"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        </footer>
     </div>
+
 </body>
 </html>

@@ -51,206 +51,323 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Report</title>
+    <title>Report Details | SUGO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        
+        :root {
+            --primary: #2196f3;
+            --success: #4caf50;
+            --warning: #ffa000;
+            --bg-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364 );
+        }
+
         body {
-            font-family: 'Segoi UI', Tahoma, sans-serif;
-            background: linear-gradient(135deg, #00bcd4, #2196f3);
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
             margin: 0;
-            padding: 20px;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .container {
             max-width: 900px;
-            margin: auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            width: 100%;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
         }
 
-        h2 {
-            text-align: center;
-            color: #2196f3;
-            margin-bottom: 25px;
+        .page-header {
+            background: white;
+            padding: 30px 40px;
+            border-bottom: 2px solid #f0f2f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-header h2 {
+            margin: 0;
+            font-size: 22px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-header i {
+            color: var(--primary);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            padding: 40px;
         }
 
         .section {
-            margin-bottom: 25px;
+            margin-bottom: 5px;
         }
 
         .section-title {
+            font-size: 13px;
             font-weight: 600;
-            margin-bottom: 10px;
-            color: #333;
+            text-transform: uppercase;
+            color: #aaa;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .info-box {
-            background: #f9f9f9;
-            padding: 15px;
-            border-radius: 10px;
-            line-height: 1.6;
+        .info-card {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid #edf2f7;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        .info-card b {
+            color: #555;
+            font-size: 14px;
+        }
+
+        .info-card p {
+            margin: 5px 0 0;
+            color: #333;
+            font-weight: 500;
         }
 
         .badge {
-            display: inline-block;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
         }
 
         .pending {
-            background: #fff3cd;
-            color: #856404;
+            background: #fff8e1;
+            color: #ffa000;
         }
 
         .assigned {
             background: #e3f2fd;
-            color: #0d47a1;
+            color: #1976d2;
         }
 
         .resolved {
             background: #e8f5e9;
-            color: #2e7d32;
+            color: #388e3c;
         }
 
-        img {
+        .media-section {
+            padding: 0 40px 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .img-container, #map {
             width: 100%;
-            max-height: 300px;
+            height: 250px;
+            border-radius: 16px;
             object-fit: cover;
-            border-radius: 12px;
-            margin-top: 10px;
+            border: 4px solid #f8fafc;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
-        #map {
-            width: 100%;
-            height: 300px;
-            border-radius: 12px;
-            margin-top: 10px;
-        }
-
-        form {
+        .update-box {
+            background: #f1f5f9;
+            padding: 30px 40px;
             display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        select, button {
-            padding: 12px;
-            font-size: 15px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
+        .update-form {
+            display: flex;
+            gap: 15px;
+        }
+
+        select {
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 2px solid #ddd;
+            font-family: inherit;
+            font-weight: 600;
+            outline: none;
         }
 
         button {
-            background: #4caf50;
+            background: var(--primary);
             color: white;
             border: none;
+            padding: 12px 30px;
+            border-radius: 12px;
+            font-weight: 600;
             cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         button:hover {
-            background: #43a047;
+            background: #1976d2;
+            transform: translateY(-2px);
         }
 
-        .back {
-            display: inline-block;
-            margin-top: 20px;
+        .back-link {
+            padding: 20px 40px;
+            text-align: center;
+        }
+
+        .back-link a {
             text-decoration: none;
-            color: #2196f3;
-            font-weight: 500;
+            color: #888;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.3s;
         }
 
-        .back:hover {
-            text-decoration: underline;
+        .back-link a:hover {
+            color: var(--primary);
         }
 
-        @media (max-width: 600px) {
-            form {
+        @media (max-width: 768px) {
+            .content-grid, .media-section, .update-box {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            .update-box {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .update-form {
+                width: 100%;
                 flex-direction: column;
             }
         }
     </style>
+
 </head>
 <body>
+    
     <div class="container">
-        <h2>Report Details</h2>
-
-        <div class="section">
-            <div class="section-title">Reporter Information</div>
-            <div class="info-box">
-                <b>Name:</b> <?= htmlspecialchars($report['user_name']) ?><br>
-                <b>Email:</b> <?= htmlspecialchars($report['email']) ?>
-            </div>
+        <div class="page-header">
+            <h2><i class="fas fa-file-alt"> Report #<?= $report['id'] ?></i></h2>
+            <span class="badge <?= $report['status'] ?>">
+                <i class="fas fa-circle" style="font-size: 8px; margin-right: 5px;" ></i>
+                <?= ucfirst($report['status'] === 'assigned' ? 'In Progress' : $report['status']) ?>
+            </span>
         </div>
 
-        <div class="section">
-            <div class="section-title">Report Information</div>
-            <div class="info-box">
-                <b>Title:</b> <?= htmlspecialchars($report['title']) ?><br>
-                <b>Description:</b><br>
-                <?= nl2br(htmlspecialchars($report['description'])) ?><br><br>
-                <b>Status:</b>
-                <span class="badge <?= $report['status'] ?>">
-                    <?= ucfirst($report['status']) ?>
-                </span>
-            </div>
-        </div>
-
-        <?php if (!empty($report['photo_path'])): ?>
+        <div class="content-grid">
             <div class="section">
-                <div class="section-title">Photo Evidence</div>
-                <img src="../<?= $report['photo_path'] ?>" alt="Report Photo">
+                <div class="section-title"><i class="fas fa-user"></i> Respondent</div>
+                <div class="info-card">
+                    <b>Name</b> <p><?= htmlspecialchars($report['user_name']) ?></p>
+                    <div style="margin-top: 10px;"></div>
+                    <b>Email</b> <p><?= htmlspecialchars($report['email']) ?></p>
+                </div>
             </div>
-        <?php endif; ?>
+
+            <div class="section">
+                <div class="section-title"><i class="fas fa-info-circle"></i> Issue Details</div>
+                <div class="info-card">
+                    <b>Subject</b> <p><?= htmlspecialchars($report['title']) ?></p>
+                    <div style="margin-top: 10px; "></div>
+                    <b>Description</b> <p style="font-size: 13px; line-height: 1.5; font-weight: 400;"><?= nl2br(htmlspecialchars($report['description'])) ?></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="media-section">
+        <div class="section">
+            <div class="section-title"><i class="fas fa-camera"></i> Evidence</div>
+            <?php if (!empty($report['photo_path'])): ?>
+                <img src="../<?= $report['photo_path'] ?>" class="img-container" alt="Report Photo">
+            <?php else: ?>
+                <div class="info-card" style="display: flex; align-items: center; justify-content: center; height: 250px; color: #ccc;">
+                    No Photo Attached!
+                </div>
+            <?php endif; ?>
+        </div>
 
         <div class="section">
-            <div class="section-title">Location</div>
+            <div class="section-title"><i class="fas fa-map-marker-alt"></i> 
+                Location
+            </div>
             <div id="map"></div>
         </div>
+    </div>
 
-        <div class="section">
-            <div class="section-title">Update Status</div>
-            <form method="POST">
+    <div class="update-box">
+        <div class="section-title" style="margin: 0; color: #444;">Update Work Progress</div>
+        <form class="update-form" method="POST">
                 <select name="status" required>
-                    <option disabled selected>Select Status</option>
-
-                    <?php if ($report['status'] !== 'resolved'):?>
+                    <option disabled selected>Choose Status</option>
+                    <?php if ($report['status'] !== 'resolved'): ?>
                         <option value="assigned">In Progress</option>
-                        <option value="resolved">Completed</option>
-                    <?php endif; ?> 
+                        <option value="resolved">Mark as Completed</option>
+                    <?php endif; ?>
                 </select>
 
-                <button type="submit">Update</button>
-            </form>
-        </div>
-
-        <a class="back" href="home.php">Back To Dashboard</a>
-
+                <button type="submit" style="font-family: 'Poppins', sans-serif">
+                    <i class="fas fa-sync-alt"></i> Update Status
+                </button>
+        </form>
     </div>
-    <script>
-        function initMap() {
-            const reportLocation = {
-                lat: <?= $report['latitude'] ?>,
-                lng: <?= $report['longitude'] ?>
-            };
+    
+    <div class="back-link">
+        <a href="home.php"><i class="fas fa-chevron-left"></i> Home</a>
+    </div>
+</div>
 
-            const map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 15,
-                center: reportLocation
-            });
+<script>
+    function initMap() {
+        const reportLocation = {
+            lat: <?= $report['latitude'] ?>,
+            lng: <?= $report['longitude'] ?>
+        };
 
-            new google.maps.Marker({
-                position: reportLocation,
-                map: map
-            });
-        }
-    </script>
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 15,
+            center: reportLocation,
+        });
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1g808lCIljv4UQPq6fLfa6uwdLiiLpsc&callback=initMap" async defer></script>
+        new google.maps.Marker({
+            position: reportLocation,
+            map: map,
+            icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+        });
+    }
+</script>
+    
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1g808lCIljv4UQPq6fLfa6uwdLiiLpsc&callback=initMap" async defer></script>
+
+    
 
 </body>
 </html>
